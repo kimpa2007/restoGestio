@@ -1,23 +1,17 @@
-{% extends "base.html" %} {% block title %} Categories i productes {%
-endblock %} {% block content %}
-<div class="row categoria">
-	<button class="col-sm-offset-3 id="novaCategoria">Afegir
-		Categoria</button>
-	<button class="col-sm-offset-3 id="nouProducte">Afegir
-		Producte</button>
+{% extends "base.html" %} {% block title %} Categories i productes {% endblock %} 
 
+{% block content %}
+<div class="row categoria">
+	<button class="col-sm-offset-3 id="novaCategoria">Afegir Categoria</button>
+	<button class="col-sm-offset-3 id="nouProducte">Afegir Producte</button>
 </div>
 
 
 <div class="row">
-
-
-
 	<div class="col-sm-offset-2 col-sm-2 categoria">
 		{% for categoria in categories %}
 		<div>
-			<button id="{{ categoria.categoria }}">{{
-				categoria.categoria }}</button>
+			<button id="{{ categoria.categoria }}">{{ categoria.categoria }}</button>
 		</div>
 		{% endfor %}
 	</div>

@@ -9,17 +9,17 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.views import password_reset
 from gestio.models import Categoria
 import re
-import hashlib
+from django.contrib.auth.hashers import PBKDF2PasswordHasher
 
 # Funció per autenticar usuaris
 def autenticacio(request):
 #Si POST hi han dades  per processar
+    if request.user.is_authenticated():
+        defaultNext = reverse('gestio:menu')
+        next = request.GET.get('next',defaultNext)
+        return HttpResponseRedirect(next)
     if request.method == 'POST': 
         form = formulariLogin(request.POST)
-        if request.user.is_authenticated():
-            defaultNext = reverse('gestio:menu')
-            next = request.GET.get('next',defaultNext)
-            return HttpResponseRedirect(next)
         #Comprovar si les dades entrades són correctes 
         if form.is_valid():
             #Emmagatzemem les dades que es troben al diccioanri form.cleaned_data a les variables corresponents
@@ -87,18 +87,22 @@ def canviContrasenya(request):
         if form.is_valid():
             novaContrasenya1 = form.cleaned_data['novaContrasenya1']
             novaContrasenya2 = form.cleaned_data['novaContrasenya2']
-            
-            #Comprovar que les contrasenyes no siguin massa senzilles
-            if re.match(r'[A-Za-z0-9@#$%^&+=]{8,}', novaContrasenya1):
-                if novaContrasenya1 != novaContrasenya2:
-                    messages.error(request, "Les noves contrasenyes no es correponen.")
-                    return render(request, 'error.html')
+            vellaContrasenya = form.cleaned_data['vellaContrasenya']
+            usuari = request.user
+            if usuari.check_password(vellaContrasenya):
+                #Comprovar que les contrasenyes no siguin massa senzilles
+                if re.match(r'[A-Za-z0-9@#$%^&+=]{8,}', novaContrasenya1):
+                    if novaContrasenya1 != novaContrasenya2:
+                        messages.error(request, "Les noves contrasenyes no es correponen.")
+                        return render(request, 'error.html')
+                    else:
+                        usuari.set_password(novaContrasenya1)
+                        usuari.save()
+                        messages.success(request, "Contrasenya cambiada")
                 else:
-                    usuari.set_password(novaContrasenya1)
-                    usuari.save()
-                    messages.success(request, "Contrasenya cambiada")
+                    messages.error(request, "Contrasenya massa senzilla.")
             else:
-                messages.error(request, "Contrasenya massa senzilla.")
+                messages.error(request, "La contrasenya actual no correspon")
     else:
         form = formulariCanvi() 
 
