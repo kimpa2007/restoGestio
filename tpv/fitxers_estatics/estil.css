@@ -1,0 +1,15 @@
+#barraDalt,#adeu {
+	background-color: #01A9DB !important;
+	color: white !important;
+	margin-bottom: 0px !important;
+}
+
+#barra2 {
+	margin-top: 0px;
+}
+
+.categoria button {
+	width: 120px !important;
+	height: 60px !important;
+	margin-bottom: 5px !important;
+}

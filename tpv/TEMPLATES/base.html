@@ -1,0 +1,97 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="{% static 'bootstrap/css/bootstrap.min.css' %}"
+	rel="stylesheet">
+<link href="{% static 'bootstrap/css/mensajes.css' %}" rel="stylesheet">
+<link href="{% static 'estil.css' %}" rel="stylesheet">
+<script src="{% static 'codi.js' %}" type="text/javascript"></script>
+<title>{% block title %} base {% endblock %}</title>
+<link rel="shortcut icon" href="{% static 'imatges/favicon.ico' %}"
+	type="image/icon">
+<link rel="icon" href="{% static 'imatges/favicon.ico' %}"
+	type="image/icon">
+</head>
+<body>
+	<nav class="navbar navbar-top" role="navigation" id="barraDalt">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 navbar-text">
+					<button type="button" class="navbar-toggle" data-toggle="collapse"
+						data-target="#menuMagic">
+						<span id="usuari"> <a
+							href="{% url 'gestio:canviContrasenya' %}"> <span
+								class="glyphicon glyphicon-user"></span> Hola {{user.username}}
+						</a> <a id="adeu" href="{% url 'gestio:desautenticacio' %}"> <span
+								class="glyphicon glyphicon-log-out"></span> Logout
+						</a>
+						</span>
+					</button>
+
+					<div class="collapse navbar-collapse" id="menuMagic">
+						<!--<span class="col-sm-2"><a class="logo-wrapper" href="{% url 'gestio:menu' %}"><span id="logo"><img src="{% static 'imatges/logo.png' %}"></span></a></span>-->
+						<span id="dataHora" class="col-sm-offset-1 col-sm-2">00/00/0000
+							00:00:00 </span> {% if user.is_authenticated %} <span id="usuari">
+							<a class="col-sm-offset-1 col-sm-2"
+							href="{% url 'gestio:canviContrasenya' %}"> <span
+								class="glyphicon glyphicon-user"></span> Hola {{user.username}}
+						</a> <a class="col-sm-offset-3 col-sm-2" id="adeu"
+							href="{% url 'gestio:desautenticacio' %}"> <span
+								class="glyphicon glyphicon-log-out"></span> Logout
+						</a> {% endif %} 
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+	{% if user.is_authenticated %}
+	<nav class="navbar navbar-inverse" role="navigation" id="barra2">
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-12 navbar-text">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle" data-toggle="collapse"
+							data-target="#menuMagic2">
+							<span class="sr-only">Toggle navigation</span> <span
+								class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+					</div>
+					<div class="collapse navbar-collapse" id="menuMagic2">
+						<ul class="nav navbar-nav">
+							<li><a href="{% url 'gestio:llistarCategories' %}"><span
+									class="glyphicon glyphicon-glass"></span> Manteniment de
+									productes </a></li>
+							<li class="dropdown"><a class="dropdown-toggle "
+								data-toggle="dropdown" href="#"><span
+									class="glyphicon glyphicon-bell"></span> Consultar comandes<b
+									class="caret"></b> </a>
+								<ul class="col-sm-offset-1 col-md-4 dropdown-menu">
+									<li><a href="">Comandes pendents</a></li>
+									<li><a href="">Comandes tancades</a></li>
+								</ul></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+	{% endif %}
+	<div id="missatges">
+		{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+			<li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{
+				message }}</li> {% endfor %}
+		</ul>
+		{% endif %}
+	</div>
+	<div id="contingut">{% block content %} patata {% endblock %}</div>
+	<script src="{% static 'bootstrap/js/jquery.js' %}"></script>
+	<script src="{% static 'bootstrap/js/mensajes.js' %}"></script>
+	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>
