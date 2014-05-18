@@ -11,10 +11,11 @@
 	<div class="col-sm-offset-2 col-sm-2 categoria">
 		{% for categoria in categories %}
 		<div>
-			<button id="{{ categoria.categoria }}">{{ categoria.categoria }}</button>
+			<button value="{{ categoria.categoria }}" class="categories">{{ categoria.categoria }}</button>
 		</div>
 		{% endfor %}
 	</div>
-	<div class="col-sm-offset-1 col-sm-6"></div>
+	<div id="productes">
+	</div>
 </div>
 {% endblock %}

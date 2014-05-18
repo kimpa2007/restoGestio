@@ -19,8 +19,8 @@
 				<div class="col-sm-12 navbar-text">
 					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#menuMagic">
 						<span id="usuari"> 
-							<a href="{% url 'gestio:canviContrasenya' %}"> <span class="glyphicon glyphicon-user"></span> Hola {{user.username}}	</a> 
-							<a id="adeu" href="{% url 'gestio:desautenticacio' %}"> <spanclass="glyphicon glyphicon-log-out"></span> Logout</a>
+							<a href="{% url 'usuaris:canviContrasenya' %}"> <span class="glyphicon glyphicon-user"></span> Hola {{user.username}}	</a> 
+							<a id="adeu" href="{% url 'usuaris:desautenticacio' %}"> <spanclass="glyphicon glyphicon-log-out"></span> Logout</a>
 						</span>
 					</button>
 
@@ -29,10 +29,10 @@
 						<span id="dataHora" class="col-sm-offset-1 col-sm-2">00/00/0000 00:00:00 </span>
 						{% if user.is_authenticated %} 
 							<span id="usuari">
-							<a class="col-sm-offset-1 col-sm-2" href="{% url 'gestio:canviContrasenya' %}"> 
+							<a class="col-sm-offset-1 col-sm-2" href="{% url 'usuaris:canviContrasenya' %}"> 
 								<span class="glyphicon glyphicon-user"></span> Hola {{user.username}}
 							</a> 
-							<a class="col-sm-offset-3 col-sm-2" id="adeu" href="{% url 'gestio:desautenticacio' %}"> 
+							<a class="col-sm-offset-3 col-sm-2" id="adeu" href="{% url 'usuaris:desautenticacio' %}"> 
 								<span	class="glyphicon glyphicon-log-out"></span> Logout
 						    </a>
 						 {% endif %} 
@@ -57,7 +57,7 @@
 					<div class="collapse navbar-collapse" id="menuMagic2">
 						<ul class="nav navbar-nav">
 							<li>
-								<a href="{% url 'gestio:llistarCategories' %}">
+								<a href="{% url 'productes:llistarCategories' %}">
 									<span class="glyphicon glyphicon-glass"></span> Manteniment de productes 
 								</a>
 							</li>
@@ -87,5 +87,6 @@
 	<script src="{% static 'bootstrap/js/jquery.js' %}"></script>
 	<script src="{% static 'bootstrap/js/mensajes.js' %}"></script>
 	<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+	<script src="{% static 'codiQueryGestio.js' %}"></script>
 </body>
 </html>

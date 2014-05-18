@@ -37,6 +37,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'gestio',
+    'productes',
+    'usuaris',
+    'comanda',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -92,8 +95,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 #Login i logout
-LOGIN_URL = '/gestio/'
-LOGOUT_URL = '/gestio/logout'
+LOGIN_URL = '/usuaris/'
+LOGOUT_URL = '/usuaris/logout'
 
 #Templates
 TEMPLATE_DIRS = [os.path.join(BASE_DIR, 'TEMPLATES'),]
