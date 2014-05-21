@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block title %} Editar Producte {% endblock %} 
+{% block content %}
+	{% if comanda %}
+		<div class="col-md-offset-1 col-md-10">
+		<div class="row">
+			<span class="col-md-2">Numero comanda: {{ comanda.id }}</span>
+			<span class="col-md-4">Data i hora: {{ comanda.dataHora }}</span>
+			<span class="col-md-2">Atès per: {{ comanda.usuari }} </span>
+			<span class="col-md-3 btn btn-success"> <a href="{% url 'comandes:tancarComanda' comanda.id %}"> Tancar comanda </a></span>
+		</div>
+		<hr></hr>
+		<hr></hr>
+		<span  class="col-md-3"> Producte </span>
+		<span  class="col-md-2"> Quantitat </span>
+		<span  class="col-md-2"> Moment Apat </span>
+		<span  class="col-md-2"> Comentari </span>
+		<hr class="row"></hr>
+	{% for linia in liniesComandes %}
+		<div class="row">
+		<span class="col-md-3">{{ linia.producte }} {{ linia.opcio.descripcio }}</span>
+		<span class="col-md-2">{{ linia.total }}</span>
+		<span class="col-md-2">{{ linia.momentApat }}</span>
+		<span class="col-md-4">{{ linia.commentari }}</span>
+		</div>
+	{% endfor %}
+		</div>
+	{% endif %}
+{% endblock %}

@@ -13,3 +13,20 @@
 	height: 60px !important;
 	margin-bottom: 5px !important;
 }
+.element{
+	padding: 5px !important;
+	border-radius: 7px;
+	border-style: solid;
+	background-color: lightblue !important;
+	text-align:center;
+	font-size: 22px;
+	margin: 1%;
+}
+
+.senseImg{
+	height: 590% !important;
+	line-height: 590% !important;
+}
+.etiqueta{
+	font-size: 80% !important;
+}

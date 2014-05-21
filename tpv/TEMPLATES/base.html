@@ -26,7 +26,7 @@
 
 					<div class="collapse navbar-collapse" id="menuMagic">
 						<!--<span class="col-sm-2"><a class="logo-wrapper" href="{% url 'gestio:menu' %}"><span id="logo"><img src="{% static 'imatges/logo.png' %}"></span></a></span>-->
-						<span id="dataHora" class="col-sm-offset-1 col-sm-2">00/00/0000 00:00:00 </span>
+						<span id="dataHora" class="col-sm-offset-1 col-sm-2"> {{ hora }} </span>
 						{% if user.is_authenticated %} 
 							<span id="usuari">
 							<a class="col-sm-offset-1 col-sm-2" href="{% url 'usuaris:canviContrasenya' %}"> 
@@ -65,8 +65,9 @@
 								<a class="dropdown-toggle " data-toggle="dropdown" href="#">
 									<span class="glyphicon glyphicon-bell"></span> Consultar comandes<b class="caret"></b> </a>
 								<ul class="col-sm-offset-1 col-md-4 dropdown-menu">
-									<li><a href="">Comandes pendents</a></li>
-									<li><a href="">Comandes tancades</a></li>
+									<li><a href="{% url 'comandes:llistarComandesPendents' %}">Comandes pendents</a></li>
+									<li><a href="{% url 'comandes:llistarComandesTancades' %}">Comandes tancades</a></li>
+									<li><a href="{% url 'comandes:llistarComandes' %}">Totes les comandes</a></li>
 								</ul>
 							</li>
 						</ul>

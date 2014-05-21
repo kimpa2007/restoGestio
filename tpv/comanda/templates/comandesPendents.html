@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block title %} Comandes pendents {% endblock %} 
+
+{% block content %}
+	{% for comanda in comandesPendents %}
+		<div class="row col-md-offset-2">
+			<span class="col-md-2"> Comanda:	<a value="{{ comanda.id }}" class="comandes">{{ comanda.id }}</a></span>
+			<span class="col-md-2"> Taula: {{ comanda.taula.id }} </span>
+			<span class="col-md-4"> Data i hora: {{ comanda.dataHora }} </span>
+			<span class="col-md-2">
+				<!-- si usuari es cambrer, edita <button class="btn btn-default"><a href={{comanda.id}}>Edita</a></button>-->
+				<a class="btn btn-default" href="{% url 'comandes:veureDetalls' comanda.id %}">Veure detalls</a>
+			</span>
+		</div>
+	{% endfor %}
+{% endblock %}

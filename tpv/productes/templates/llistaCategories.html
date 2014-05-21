@@ -2,8 +2,8 @@
 
 {% block content %}
 <div class="row categoria">
-	<button class="col-sm-offset-3 id="novaCategoria">Afegir Categoria</button>
-	<button class="col-sm-offset-3 id="nouProducte">Afegir Producte</button>
+	<button class="col-sm-offset-3"><a href="{% url 'productes:afegirCategoria'%}" id="novaCategoria">Afegir Categoria</a></button>
+	<button class="col-sm-offset-3"><a href="{% url 'productes:afegirProducte'%}" id="nouProducte">Afegir Producte</a></button>
 </div>
 
 
@@ -14,8 +14,25 @@
 			<button value="{{ categoria.categoria }}" class="categories">{{ categoria.categoria }}</button>
 		</div>
 		{% endfor %}
+		
+		<div class="pagination">
+		{% if categories.has_previous %} <li><a href="?pagina={{ categories.previous_page_number }}">&laquo;</a></li>
+		{% else %} <li class="disabled"> <a>&laquo;</a> </li>
+		{% endif %}
+
+		{% for i in categories.paginator.page_range %}
+		{% ifequal i categories.number %} <li class="active"> <a href="?pagina={{ i }}">{{ i }}</a></li>
+		{% else %}<li> <a href="?pagina={{ i }}">{{ i }}</a></li>
+		{% endifequal %}
+		{% endfor %}
+
+		{% if categories.has_next %}<li><a href="?pagina={{ categories.next_page_number }}">&raquo;</a></li>
+		{% else %}<li class="disabled"><a>&raquo;</a></li>
+		{% endif %}
+		</div>
 	</div>
 	<div id="productes">
+	</div>
 	</div>
 </div>
 {% endblock %}
