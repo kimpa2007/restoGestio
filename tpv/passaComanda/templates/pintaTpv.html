@@ -1,0 +1,51 @@
+{% extends "basetpv.html" %} 
+{% load staticfiles %}
+{% block title %} tpv {% endblock %} 
+{% block content %}
+<div class="als-container" id="demo1">
+  	<span class="amagats als-prev"><img src="{% static 'imatges/thin_left_arrow_333.png' %}" alt="prev" title="previous" /></span>
+	<div class="als-viewport">
+	<ul id ="categories" class="als-wrapper">
+	</ul>
+	</div>
+	 <span class="amagats als-next"><img src="{%static 'imatges/thin_right_arrow_333.png' %}" alt="next" title="next" /></span>
+</div>
+
+<div class="row">
+	<div id="numeros" class="col-md-offset-2 col-sm-offset-1 col-md-2 col-sm-2 marcNum">
+		<span class="btn btn-default num">0</span>
+		<span class="btn btn-default num">1</span>
+		<span class="btn btn-default num">2</span>
+		<span class="btn btn-default num">3</span>
+		<span class="btn btn-default num">4</span>
+		<span class="btn btn-default num">5</span>
+		<span class="btn btn-default num">6</span>
+		<span class="btn btn-default num">7</span>
+		<span class="btn btn-default num">8</span>
+		<span class="btn btn-default num">9</span>
+	</div>
+	
+	
+	<div class="col-md-offset-1 col-sm-offset-1 col-md-5 col-sm-5" id="productes">
+	</div>
+
+	<div class="col-md-2" id="resum">
+	aaaaaaaaa
+	</div>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        <h4 class="modal-title" id="myModalLabel">Tria les opcions</h4>
+	      </div>
+	      <div class="modal-body" id="contenido-interno">
+	      </div>
+	      <div class="modal-footer">
+	        <button id='cancela' type="button" class="btn btn-default" data-dismiss="modal">Tanca</button>
+	        <button id='guarda' type="button" class="btn btn-primary" data-dismiss="modal">Guarda</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+{% endblock %}

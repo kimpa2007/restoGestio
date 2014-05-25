@@ -12,5 +12,6 @@ urlpatterns = patterns('',
     url(r'^usuaris/', include('usuaris.urls', namespace='usuaris')),
     url(r'^productes/', include('productes.urls', namespace='productes')),
     url(r'^comandes/', include('comanda.urls', namespace='comandes')),
+    url(r'^tpv/', include('passaComanda.urls', namespace='tpv')),
 
 ) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

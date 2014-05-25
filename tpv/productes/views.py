@@ -3,13 +3,14 @@
 from django.shortcuts import render,get_object_or_404
 from django.core import serializers
 from django.http import HttpResponse
-from models import Categoria, Producte
+from models import Categoria, Producte, Opcio
 from productes.forms import formProducte, formCategoria
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http.response import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import json
 
 @login_required
 def llistarProductes(request):
@@ -35,6 +36,13 @@ def llistarCategories(request):
         categories = paginator.page(1)
     context = { 'categories' : categories }
     return render(request, 'llistaCategories.html', context)
+
+@login_required
+def llistarCategoriesAjax(request):
+    categories = Categoria.objects.all()
+    categoriesJson = serializers.serialize('json', categories)
+    print categoriesJson
+    return HttpResponse(categoriesJson, content_type="application/json")    
 
 @login_required
 def afegirProducte(request,categoria=None):
@@ -71,7 +79,7 @@ def afegirCategoria(request):
         form = formCategoria(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, 'Categoria afegia')
+            messages.success(request, 'Categoria afegida')
             return HttpResponseRedirect(reverse('productes:llistarCategories'))
         else:
             messages.error(request, 'Error al afegir la categoria')
@@ -87,7 +95,6 @@ def editarProducte(request, idProducte):
 
     if idProducte is not None:
         producteExist = Producte.objects.filter(pk = idProducte).exists()
-        print producteExist
         if producteExist:
             producte = get_object_or_404(Producte, pk=idProducte)
             print producte
@@ -106,3 +113,24 @@ def editarProducte(request, idProducte):
     else:
         form = formProducte(instance=producte)
     return render(request, 'editarProducte.html', {'form':form})
+
+@login_required
+def dadesProducte(request, idProducte):
+    producteExist = Producte.objects.filter(pk = idProducte).exists()
+    if producteExist:
+        categoria = Producte.objects.filter(pk = idProducte).values('categoria')
+        opcionsValides = Categoria.objects.filter(pk = categoria).values('opcio')
+        res = []
+        for o in opcionsValides:
+            resposta = {}
+            opcio = Opcio.objects.filter(pk = o['opcio'])
+            for n in opcio:
+                res.append(n)
+    else:
+        messages.error(request, 'Error amb el producte demanat')
+        return render(request,'error.html')
+    return HttpResponse(json.dumps(res), content_type="application/json")   
+
+@login_required
+def crearLinia(request, producte, opcio, comentari): 
+        return render(request,'error.html')

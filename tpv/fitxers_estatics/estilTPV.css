@@ -1,0 +1,19 @@
+#barraDalt,#adeu {
+	background-color: lightgreen !important;
+	color: white !important;
+	margin-bottom: 0px !important;
+}
+
+.num{
+	width: 24% !important;
+	heigth: 35% !important;  
+	padding: 5% !important;
+	margin: 3%
+}
+#numeros{
+	display: none;
+	margin: 5%;
+	margin-top: 0%;
+	padding: 2%;
+	background-color: lightgreen;
+}
