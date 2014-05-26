@@ -116,20 +116,23 @@ def editarProducte(request, idProducte):
 
 @login_required
 def dadesProducte(request, idProducte):
-    producteExist = Producte.objects.filter(pk = idProducte).exists()
-    if producteExist:
-        categoria = Producte.objects.filter(pk = idProducte).values('categoria')
-        opcionsValides = Categoria.objects.filter(pk = categoria).values('opcio')
-        res = []
-        for o in opcionsValides:
-            resposta = {}
-            opcio = Opcio.objects.filter(pk = o['opcio'])
-            for n in opcio:
-                res.append(n)
-    else:
-        messages.error(request, 'Error amb el producte demanat')
-        return render(request,'error.html')
-    return HttpResponse(json.dumps(res), content_type="application/json")   
+     producteExist = Producte.objects.filter(pk = idProducte).exists()
+     if producteExist:
+         categoria = Producte.objects.filter(pk = idProducte).values('categoria')
+         opcionsValides = Categoria.objects.filter(pk = categoria).values('opcio')
+         res = []
+         for o in opcionsValides:
+             resposta = {}
+             opcio = Opcio.objects.filter(pk = o['opcio'])
+             for n in opcio:
+                 print n
+                 resposta['opcio'] = str(n)
+             res.append(resposta)
+         print res
+     else:
+         messages.error(request, 'Error amb el producte demanat')
+         return render(request,'error.html')
+     return HttpResponse(json.dumps(res), content_type="application/json")    
 
 @login_required
 def crearLinia(request, producte, opcio, comentari): 

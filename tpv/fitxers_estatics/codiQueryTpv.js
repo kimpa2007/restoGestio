@@ -122,7 +122,7 @@ $(document).ready(function() {
         	success : function(opcions) {
         		  var opcionetes = new Array();
         		  for(var i=0; i<opcions.length; i++){
-        			  opcionetes.push(opcions[i]['descripcio']);
+        			  opcionetes.push(opcions[i]['opcio']);
         		  }
         		  modal(opcionetes);
         	},
