@@ -1,11 +1,11 @@
 from django.shortcuts import render, get_object_or_404
-from models import Comanda, LiniaComanda
+from models import Comanda, LiniaComanda, MomentApat
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.contrib import messages
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
-
+import json 
 # Create your views here.
 @login_required
 def llistarComandes(request):
@@ -55,3 +55,20 @@ def tancarComanda(request, idComanda):
         messages.error(request, 'No es poden tancar una comanda que no existeix.')
         return render(request,'error.html')
     return HttpResponseRedirect(reverse('comandes:llistarComandesPendents'))
+
+@login_required
+def recuperarMomentsApat(request):
+     momentsAp = MomentApat.objects.all().exists()
+     res = []
+     if momentsAp:
+         opcio = MomentApat.objects.values('descripcio')
+         print opcio
+         for n in opcio:
+                resposta = {}
+                print n
+                resposta['moment'] = n             
+                res.append(resposta)
+     else:
+         resposta = {}
+         resposta['error'] = "Error amb els moments apats."
+     return HttpResponse(json.dumps(res), content_type="application/json")    

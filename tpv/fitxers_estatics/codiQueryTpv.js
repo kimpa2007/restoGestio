@@ -1,7 +1,9 @@
 $(document).ready(function() { 
 	var quantitat = "";
 	var producte = "";
-	
+	var comandeta;
+	var moments = new Array();
+
 	if ($('#usuari').length > 0) {
 		 $.ajax({
 	        	url : "/tpv/donaTaules",
@@ -22,12 +24,19 @@ $(document).ready(function() {
 	        		      }
 	        		  });
 	        		  $('#tauletes').append("<button class='btn btn-success' id='comprovaT'> OK </button>")
+	        		 
 	        		  $('#comprovaT').click(function(){
+	        				var idTaula = $("#taules option:selected" ).attr('value');
 	        				var tauleta = $("#taules option:selected" ).text()
+	        				
 	        				$("#taules").empty();
 	        				$("#taules").append("<span>" + tauleta + "</span>")
 	        				$(".amagats").show();
 	        				$("#numeros").show();
+	        				
+	        				comandeta = new Comanda();
+	        				var idTaula = $("#taules option:selected");
+	        				comandeta.setTaula(idTaula)
 	        				carregaCategories();
 	        		  });
 	        	}
@@ -47,8 +56,8 @@ $(document).ready(function() {
 					   $("#categories").append("<li class='als-item categories'><img src='/media/" + imatge + "' alt='" + nom + "'/>" + nom + "</li></a>" )
 				   });
 				   $("#demo1").als({
-						visible_items: 5,
-						scrolling_items: 3,
+						visible_items: 4,
+						scrolling_items: 2,
 						orientation: "horizontal",
 						circular: "no",
 						autoscroll: "no"
@@ -83,6 +92,7 @@ $(document).ready(function() {
 					        		   
 				        		      }
 				        		  });
+				      			  carregaMoment();
 			        		      esperaProducte();
 				        	},
 				        	error : function(xhr,errmsg,err) {				        	
@@ -104,6 +114,7 @@ $(document).ready(function() {
 	});
 	
 	function esperaProducte(){
+		
 		$(".producte").click(function(){
 			var idProducte = $(this).attr("id");
 			producte = $(this).text();
@@ -111,6 +122,24 @@ $(document).ready(function() {
 			//Si es surt del modal sense donar als botons, fent això aqui m'asseguro de que no es faci servir el que s'hagi entrat abans
 			$("#contenido-interno").empty();
 		});
+	}
+	
+	function carregaMoment(){
+		$.ajax({
+        	url : "/comandes/momentApat/",
+        	type : "GET",
+        	dataType: "json",
+
+        	success : function(e) {
+        		$.each(e, function(){
+        			var moment = this['moment']['descripcio']
+        			moments.push(moment)
+        		}); 
+        	},
+        	error : function(xhr,errmsg,err) {				        	
+        		console.log("error")
+        	}
+        });
 	}
 	
 	function carregaOpcions(idProducte){
@@ -122,7 +151,7 @@ $(document).ready(function() {
         	success : function(opcions) {
         		  var opcionetes = new Array();
         		  for(var i=0; i<opcions.length; i++){
-        			  opcionetes.push(opcions[i]['opcio']);
+        			  if (opcions[i]['opcio'] != null)    			  opcionetes.push(opcions[i]['opcio']);
         		  }
         		  modal(opcionetes);
         	},
@@ -132,7 +161,6 @@ $(document).ready(function() {
         	});
 	}
 	
-	
 		function modal(opcionetes) {
 			$("#myModal").modal('show');
 			if(quantitat == "")  quantitat = 1;
@@ -140,11 +168,17 @@ $(document).ready(function() {
 			$("#contenido-interno").append("<form class='form-horizontal' id='formulari'></form>")
 			$("#formulari").append("<label>Quantitat</label><input id='qtat' type='number' class='form-control'></input>");
 			$("#qtat").val(quantitat);
-			
+
 			if(opcionetes.length > 0){
 				$("#formulari").append("<label> Opcio </label><select class='form-control' id='opcionetes'></select>")
 				for(var i=0; i<opcionetes.length; i++){
 					$("#opcionetes").append("<option value=" + opcionetes[i]+ ">" + opcionetes[i] + "</option>")
+				}
+			}
+			if(moments.length > 0){
+				$("#formulari").append("<label> Moment Apat </label><select class='form-control' id='momentet'></select>")
+				for(var i=0; i<moments.length; i++){
+					$("#momentet").append("<option value=" + moments[i]+ ">" + moments[i] + "</option>")
 				}
 			}
 			$("#formulari").append("<label> Comentari </label> <textarea class='form-control' id='comentari'>")
@@ -159,9 +193,23 @@ $(document).ready(function() {
 				quantitat = $("#qtat").val();
 				var opcio = $("#opcionetes option:selected" ).text()
 				var comentari = $("#comentari").val()
-				console.log("producte " + producte + " qtat " + quantitat + " opcio " + opcio + " comentari " + comentari)
-				//Enviar les dades al servidor
-				//Afegir una linia al div resum
+				var momentapat = $("#momentet option:selected").text()
+				//Crear un nou objecte
+				
+				if( quantitat != null && producte !=null && momentapat != null){
+					var liniaNova = new LiniaComanda();
+					liniaNova.setProducte(producte);
+					liniaNova.setQuantitat(quantitat);
+					liniaNova.setComentari(comentari);
+					liniaNova.setMomentApat(momentapat);
+					liniaNova.setOpcio(opcio)
+					comandeta.setLinies(liniaNova);
+					console.log(comandeta.getLinies())
+					
+					//Afegir una linia al div resum
+					$("#resum").append("<span>" + producte + " " + quantitat + "</span>");
+				}
+				
 				netejaModal();
 			});
 		}

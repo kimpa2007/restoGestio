@@ -8,10 +8,11 @@ from productes.models import Producte
 
 metode_pagament_choice = (('targeta','Targeta'),('effectiu','Effectiu')    )
 estat_comanda_choice = (('pendent','Pendent'),('tancada','Tancada'),('curs','En curs'))
-moment_apat_choice = (('apertiu','Aperitiu'),('entrant','Entrant'),('segon','Segon plat'),('postre','Postre'))
 taula_choice = (('ocupada','ocupada'),('disponible','disponible'))
     
-
+class MomentApat(models.Model):
+    descripcio = models.CharField(max_length=255
+                                  )
 class Taula(models.Model):
     capacitat = models.IntegerField()
     estat = models.CharField(max_length=255, choices=taula_choice, default='disponible')
@@ -36,8 +37,8 @@ class LiniaComanda(models.Model):
     producte = models.ForeignKey(Producte)
     total = models.FloatField(null=True, blank=True)
     commentari = models.TextField(validators=[MaxLengthValidator(200)], null=True, blank=True)
-    ##opcio = models.ManyToManyField(Opcio, null=True, blank=True)
-    momentApat = models.CharField(max_length=255, choices=moment_apat_choice)
+    opcio = models.CharField(max_length=255)
+    momentApat = models.ForeignKey(MomentApat)
     ##calcular auto total?(projecte)
 
 

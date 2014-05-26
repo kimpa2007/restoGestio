@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     url(r'^llistarTancades/$', views.llistarComandesTancades, name='llistarComandesTancades'),
     url(r'^veureDetalls/(?P<idComanda>\d+)$', views.veureDetalls, name='veureDetalls'),
     url(r'^tancarComanda/(?P<idComanda>\d+)/$', views.tancarComanda, name='tancarComanda'),
-
+    url(r'^momentApat/$', views.recuperarMomentsApat, name='recuperarMomentsApat'),
 )

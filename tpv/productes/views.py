@@ -133,7 +133,7 @@ def dadesProducte(request, idProducte):
          messages.error(request, 'Error amb el producte demanat')
          return render(request,'error.html')
      return HttpResponse(json.dumps(res), content_type="application/json")    
-
+ 
 @login_required
 def crearLinia(request, producte, opcio, comentari): 
         return render(request,'error.html')
