@@ -17,3 +17,12 @@
 	padding: 2%;
 	background-color: lightgreen;
 }
+table{
+	display: none;
+}
+#productes{
+	margin-top: 5%;
+}
+caption{
+	font-weigth: bold;
+}

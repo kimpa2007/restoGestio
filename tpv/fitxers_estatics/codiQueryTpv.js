@@ -3,7 +3,8 @@ $(document).ready(function() {
 	var producte = "";
 	var comandeta;
 	var moments = new Array();
-
+	var linia = 0;
+	
 	if ($('#usuari').length > 0) {
 		 $.ajax({
 	        	url : "/tpv/donaTaules",
@@ -31,8 +32,6 @@ $(document).ready(function() {
 	        				
 	        				$("#taules").empty();
 	        				$("#taules").append("<span>" + tauleta + "</span>")
-	        				$(".amagats").show();
-	        				$("#numeros").show();
 	        				
 	        				comandeta = new Comanda();
 	        				var idTaula = $("#taules option:selected");
@@ -53,7 +52,7 @@ $(document).ready(function() {
 					   var id = this['pk']
 					   var nom = this['fields']['categoria']
 					   var imatge =this['fields']['imatge']
-					   $("#categories").append("<li class='als-item categories'><img src='/media/" + imatge + "' alt='" + nom + "'/>" + nom + "</li></a>" )
+					   $("#categories").append("<div class='categories'><img src='/media/" + imatge + "' alt='" + nom + "'/>" + nom + "</div>" )
 				   });
 				   $("#demo1").als({
 						visible_items: 4,
@@ -81,13 +80,13 @@ $(document).ready(function() {
 				        		      var img = this['fields']['imatge'];
 				        		      var imatge = "/media/" + this['fields']['imatge'];
 				        		      if(img.length > 0){ 
-					        		      $('#productes').append("<div class='col-md-2 col-sm-2 producte'  id='" + id + 
+					        		      $('#productes').append("<div class='col-md-2 producte'  id='" + id + 
 					        		    		  "'><img class='img-responsive' src='" + imatge +
 					        		    		  "'><p class='etiqueta'>" +
 					        		    		  producte + "</p></a></div>");
 					        		      }
 				        		      else{
-					        		      $('#productes').append("<div class='col-md-2 col-sm-2 producte'  id='" + id + 
+					        		      $('#productes').append("<div class='col-md-2 producte'  id='" + id + 
 					        		    		  "'><p class='etiqueta senseImg'>" +  producte + "</p></a></div>");
 					        		   
 				        		      }
@@ -114,7 +113,6 @@ $(document).ready(function() {
 	});
 	
 	function esperaProducte(){
-		
 		$(".producte").click(function(){
 			var idProducte = $(this).attr("id");
 			producte = $(this).text();
@@ -125,6 +123,7 @@ $(document).ready(function() {
 	}
 	
 	function carregaMoment(){
+		moments = new Array();
 		$.ajax({
         	url : "/comandes/momentApat/",
         	type : "GET",
@@ -190,6 +189,7 @@ $(document).ready(function() {
 			$("#guarda").click(function(){
 				//Recuperar les dades
 				//Es tornà a recuperar la quantitat per si s'ha editat en el formulari del modal.
+				$("#resum").show()
 				quantitat = $("#qtat").val();
 				var opcio = $("#opcionetes option:selected" ).text()
 				var comentari = $("#comentari").val()
@@ -207,7 +207,39 @@ $(document).ready(function() {
 					console.log(comandeta.getLinies())
 					
 					//Afegir una linia al div resum
-					$("#resum").append("<span>" + producte + " " + quantitat + "</span>");
+					//S'ha de fer la merda aquella de que es pugui editar.....
+					console.log(momentapat)
+					var taula = "";
+					
+					switch(momentapat){
+						case "Aperitiu":
+							taula = "aperitius";
+						break;
+						case "Entrant":
+							taula = "primers";
+						break;
+						case "Segon":
+							taula = "segons";
+						break;
+						case "Postre":
+							taula = "postres";
+						break;
+						case "Per emportar":
+							taula="xemportar";
+						break;
+					}
+					
+					$("#" + taula).show();
+					$("#" + taula  + "> tbody").append("<tr id='t" + taula + linia + "'>" );
+					$("#t" + taula + linia).append("<td><button class='btn btn-info' value='mes'>+</button><button class='btn btn-danger' value='menys'>-</button></td>")
+					if(opcio != ""){
+						$("#t" + taula + linia).append("<td>" + quantitat + "</td><td>" + producte + " amb " + opcio + " " + "</td><td>" + comentari + "</td>");
+					}
+					else{
+						$("#t" + taula + linia).append("<td>" + quantitat + "</td><td>" + producte + "</td><td>" + comentari + "</td>");
+					}
+					
+					linia++;
 				}
 				
 				netejaModal();

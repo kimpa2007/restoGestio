@@ -2,37 +2,47 @@
 {% load staticfiles %}
 {% block title %} tpv {% endblock %} 
 {% block content %}
-<div class="als-container" id="demo1">
-  	<span class="amagats als-prev"><img src="{% static 'imatges/thin_left_arrow_333.png' %}" alt="prev" title="previous" /></span>
-	<div class="als-viewport">
-	<ul id ="categories" class="als-wrapper">
-	</ul>
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-6 column" >
+			<div class="row clearfix">
+				<div class="col-md-6 column" id="categories">
+		</div>
+				<div class="col-md-12 column" id="productes">
+				</div>
+			</div>
+		</div>
+			<div id="resum" class="col-md-6 column">
+				<h3> Resum de la comanda </h3>
+				
+				<table class='table-responsive table table-hover' id='tRes'>
+					<thead><th>+/-</th><th>Quantitat</th><th>Producte</th><th>Comentari</th></thead>
+				</table>
+				<table class='table-responsive table table-hover' id="aperitius">
+					<caption>Aperitius</caption>
+					<tbody></tbody>
+				</table>
+				<table class='table-responsive table table-hover' id="primers">
+					<caption>Primers</caption>
+					<tbody></tbody>
+				</table>
+				<table class='table-responsive table table-hover' id="segons">
+					<caption>Segons</caption>
+					<tbody></tbody>
+				</table>
+				<table class='table-responsive table table-hover' id="postres">
+					<caption>Postres</caption>
+					<tbody></tbody>
+				</table>
+				<table class='table-responsive table table-hover' id="xemportar">
+					<caption>Per emportar</caption>
+					<tbody></tbody>
+				</table>
+				<button class="btn btn-success" id="passaComanda">Passar Comanda </button>
+			</div>
 	</div>
-	 <span class="amagats als-next"><img src="{%static 'imatges/thin_right_arrow_333.png' %}" alt="next" title="next" /></span>
 </div>
-
-<div class="row">
-	<div id="numeros" class="col-md-offset-2 col-sm-offset-1 col-md-2 col-sm-2 marcNum">
-		<span class="btn btn-default num">0</span>
-		<span class="btn btn-default num">1</span>
-		<span class="btn btn-default num">2</span>
-		<span class="btn btn-default num">3</span>
-		<span class="btn btn-default num">4</span>
-		<span class="btn btn-default num">5</span>
-		<span class="btn btn-default num">6</span>
-		<span class="btn btn-default num">7</span>
-		<span class="btn btn-default num">8</span>
-		<span class="btn btn-default num">9</span>
-	</div>
-	
-	
-	<div class="col-md-offset-1 col-sm-offset-1 col-md-5 col-sm-5" id="productes">
-	</div>
-
-	<div class="col-md-2" id="resum">
-	aaaaaaaaa
-	</div>
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	  <div class="modal-dialog">
 	    <div class="modal-content">
 	      <div class="modal-header">
@@ -47,5 +57,4 @@
 	      </div>
 	    </div>
 	  </div>
-	</div>
 {% endblock %}
