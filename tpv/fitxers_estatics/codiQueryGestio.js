@@ -38,7 +38,6 @@ $(document).ready(function() {
         		      var producte = this['fields']['producte'];
         		      var img = this['fields']['imatge'];
         		      var imatge = "/media/" + this['fields']['imatge'];
-        		      console.log(imatge.length)
         		      if(img.length > 0){ 
 	        		      $('#productes').append("<div  class='col-md-1 element'  id='" + id + 
 	        		    		  "'><a href='http://127.0.0.1:8000/productes/editarProducte/" + id +"'><img class='img-responsive' src='" + imatge +

@@ -16,8 +16,6 @@ def llistarComandes(request):
 @login_required
 def llistarComandesPendents(request):
     comandesPendents = Comanda.objects.filter(estat='Pendent');
-    for c in comandesPendents:
-        print c.id
     context = { 'comandesPendents' : comandesPendents }
     return render(request, 'comandesPendents.html', context)
 
@@ -58,17 +56,20 @@ def tancarComanda(request, idComanda):
 
 @login_required
 def recuperarMomentsApat(request):
-     momentsAp = MomentApat.objects.all().exists()
-     res = []
-     if momentsAp:
-         opcio = MomentApat.objects.values('descripcio')
-         print opcio
-         for n in opcio:
-                resposta = {}
-                print n
-                resposta['moment'] = n             
-                res.append(resposta)
+     if(request.method == "GET"):
+         momentsAp = MomentApat.objects.all().exists()
+         res = []
+         if momentsAp:
+             opcio = MomentApat.objects.values('descripcio')
+             print opcio
+             for n in opcio:
+                    resposta = {}
+                    resposta['moment'] = n             
+                    res.append(resposta)
+         else:
+             resposta = {}
+             resposta['error'] = "Error amb els moments apats."
+         return HttpResponse(json.dumps(res), content_type="application/json")  
      else:
-         resposta = {}
-         resposta['error'] = "Error amb els moments apats."
-     return HttpResponse(json.dumps(res), content_type="application/json")    
+         return render(request,'error.html')  
+ 
