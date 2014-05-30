@@ -5,5 +5,6 @@ from passaComanda import views
 urlpatterns = patterns('',
     url(r'^$', views.pintatpv, name='pintatpv'),
     url(r'^donaTaules/$', views.donaTaules, name='donaTaules'),
+    url(r'^taulesOccupades/$', views.taulesOccupades, name="taulesOccupades"),
     url(r'^passaComanda/$', views.passaComanda, name='passaComanda'),
 )

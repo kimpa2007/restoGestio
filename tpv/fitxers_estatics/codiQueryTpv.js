@@ -18,43 +18,88 @@ $(document).ready(function() {
 			   }
 	       });
 	   },3000);
-	if ($('#usuari').length > 0) {
+	
+	$("#novaComanda").click(function(){
+		$("#tauletes").empty();
+		if ($('#usuari').length > 0) {
+			carregaMoment();
+			 $.ajax({
+		        	url : "/tpv/donaTaules",
+		        	type : "GET",
+		        	dataType: "json",
+		        	success : function(taules) {
+		        		  $('#tauletes').append("<select class='form-control' id='selecTaules'></select>");
+		        		  $.each(taules, function() {
+		        		      var id = this['pk'];
+		        		      if (id != null){
+		        		    	  var capacitat = this['fields']['capacitat']
+		        		    	  $('#selecTaules').append("<option value=" + id + "> TAULA: " + id + " Capacitat: " + capacitat + "</option>")
+		        		    	  
+		        		      }
+		        		      else{
+		        		    	  $('#taules').find(':first-child').remove();
+		        		    	  $('#taules').append("<span id='taulesIndispo'> No hi ha cap taula lliure </span>");
+		        		      }
+		        		  });
+		        		  $('#tauletes').append("<button class='btn btn-success' id='comprovaT'> OK </button>")
+		        		 
+		        		  $('#comprovaT').click(function(){
+		        				var idTaula = $("#taules option:selected" ).attr('value');
+		        				var tauleta = $("#taules option:selected" ).text()
+		        					        				comandeta = new Comanda();
+		        				var idTaula = $("#taules option:selected");
+		        				comandeta.setTaula(idTaula.attr("value"))
+		        				
+		        				$("#taules").empty();
+		        				$("#taules").append("<span>" + tauleta + "</span>")
+		        				
+		        				carregaCategories();
+		        		  });
+		        	}
+		      });
+		  }
+		
+		
+	});
+	
+	$("#editaComanda").click(function(){
+		$("#tauletes").empty();
 		carregaMoment();
-		 $.ajax({
-	        	url : "/tpv/donaTaules",
-	        	type : "GET",
-	        	dataType: "json",
-	        	success : function(taules) {
-	        		  $('#tauletes').append("<select class='form-control' id='selecTaules'></select>");
-	        		  $.each(taules, function() {
-	        		      var id = this['pk'];
-	        		      if (id != null){
-	        		    	  var capacitat = this['fields']['capacitat']
-	        		    	  $('#selecTaules').append("<option value=" + id + "> TAULA: " + id + " Capacitat: " + capacitat + "</option>")
-	        		    	  
-	        		      }
-	        		      else{
-	        		    	  $('#taules').find(':first-child').remove();
-	        		    	  $('#taules').append("<span id='taulesIndispo'> No hi ha cap taula lliure </span>");
-	        		      }
-	        		  });
-	        		  $('#tauletes').append("<button class='btn btn-success' id='comprovaT'> OK </button>")
-	        		 
-	        		  $('#comprovaT').click(function(){
-	        				var idTaula = $("#taules option:selected" ).attr('value');
-	        				var tauleta = $("#taules option:selected" ).text()
-	        					        				comandeta = new Comanda();
-	        				var idTaula = $("#taules option:selected");
-	        				comandeta.setTaula(idTaula.attr("value"))
-	        				
-	        				$("#taules").empty();
-	        				$("#taules").append("<span>" + tauleta + "</span>")
-	        				
-	        				carregaCategories();
-	        		  });
-	        	}
-	      });
-	  }
+		//carregarLinies();
+		$.ajax({
+        	url : "/tpv/taulesOccupades",
+        	type : "GET",
+        	dataType: "json",
+        	success : function(taules) {
+        		  $('#tauletes').append("<select class='form-control' id='selecTaules'></select>");
+        		  $.each(taules, function() {
+        		      var id = this['pk'];
+        		      if (id != null){
+        		    	  var capacitat = this['fields']['capacitat']
+        		    	  $('#selecTaules').append("<option value=" + id + "> TAULA: " + id + " Capacitat: " + capacitat + "</option>")
+        		    	  
+        		      }
+        		      else{
+        		    	  $('#taules').find(':first-child').remove();
+        		    	  $('#taules').append("<span id='taulesIndispo'> No hi ha cap taula ocupada </span>");
+        		      }
+        		  });
+        		  $('#tauletes').append("<button class='btn btn-success' id='comprovaT'> OK </button>");
+        		  $('#comprovaT').click(function(){
+	      				var idTaula = $("#taules option:selected" ).attr('value');
+	    				var tauleta = $("#taules option:selected" ).text()
+	    					        				comandeta = new Comanda();
+	    				var idTaula = $("#taules option:selected");
+	    				comandeta.setTaula(idTaula.attr("value"))
+	    				
+	    				$("#taules").empty();
+	    				$("#taules").append("<span>" + tauleta + "</span>")
+	    				
+	    				carregaCategories();
+        		  });
+        	}
+		});
+	});
 	
 	function carregaCategories(){
 		   $.ajax({
@@ -140,50 +185,50 @@ $(document).ready(function() {
 	function carregaMoment(){
 		moments = new Array();
 		$.ajax({
-        	url : "/comandes/momentApat/",
-        	type : "GET",
-        	dataType: "json",
+     	url : "/comandes/momentApat/",
+     	type : "GET",
+     	dataType: "json",
 
-        	success : function(e) {
-        		$.each(e, function(){
-        			var moment = this['moment']['descripcio']
-        			moments.push(moment)
-        		}); 
-        		//Un cop carregat els moments creo les taules que faran falta
-        		for(var i=0; i<moments.length; i++){
-        			var id = moments[i].replace(" ","").toLowerCase();
-        			var taula = $("<table class='table table-striped table-condensed' id='" + id + "'>");
-        			var caption = $("<caption>" + moments[i] + "</caption><tbody></tbody>");
-        			taula.append(caption)
-        			$("#resum").append(taula)
+     	success : function(e) {
+     		$.each(e, function(){
+     			var moment = this['moment']['descripcio']
+     			moments.push(moment)
+     		}); 
+     		//Un cop carregat els moments creo les taules que faran falta
+     		for(var i=0; i<moments.length; i++){
+     			var id = moments[i].replace(" ","").toLowerCase();
+     			var taula = $("<table class='table table-striped table-condensed' id='" + id + "'>");
+     			var caption = $("<caption>" + moments[i] + "</caption><tbody></tbody>");
+     			taula.append(caption)
+     			$("#resum").append(taula)
 
-        		}
-        	},
-        	error : function(xhr,errmsg,err) {				        	
-        		console.log("error")
-        	}
-        });
+     		}
+     	},
+     	error : function(xhr,errmsg,err) {				        	
+     		console.log("error")
+     	}
+     });
 		
 
 	}
 	
 	function carregaOpcions(idProducte){
 		$.ajax({
-        	url : "/productes/dadesProducte/" + idProducte,
-        	type : "GET",
-        	dataType: "json",
+     	url : "/productes/dadesProducte/" + idProducte,
+     	type : "GET",
+     	dataType: "json",
 
-        	success : function(opcions) {
-        		  var opcionetes = new Array();
-        		  for(var i=0; i<opcions.length; i++){
-        			  if (opcions[i]['opcio'] != null)    			  opcionetes.push(opcions[i]['opcio']);
-        		  }
-        		  modal(opcionetes);
-        	},
-        	error : function(xhr,errmsg,err) {				        	
-        		console.log("error")
-        	}
-        	});
+     	success : function(opcions) {
+     		  var opcionetes = new Array();
+     		  for(var i=0; i<opcions.length; i++){
+     			  if (opcions[i]['opcio'] != null)    			  opcionetes.push(opcions[i]['opcio']);
+     		  }
+     		  modal(opcionetes);
+     	},
+     	error : function(xhr,errmsg,err) {				        	
+     		console.log("error")
+     	}
+     	});
 	}
 	
 		function modal(opcionetes) {
@@ -338,18 +383,22 @@ $(document).ready(function() {
 			$.ajax({
 				url: "http://127.0.0.1:8000/tpv/passaComanda",
 		        contentType: "application/json",
-				type: "POST",
+				type: "GET",
 				data: {
-					
-					'comandeta': c
+					'comandeta': c 
 				},
 
 		        success: function (response) {
-		           console.log("ok");
+		           alert("Comanda afegida");
+		           location.reload(true);
 		        },
-		        error: function (jqXHR, textStatus) {
-		        	alert("error!");
+		        error: function (xhr, errmsg, err) {
+		        	alert(xhr.status + " " + xhr.responseText);
 		        }
 			});
 		});
+		
+		function carregarLinies(){
+			
+		}
 });

@@ -7,5 +7,6 @@ roles_choice = (('usuari','Usuari Pelat'),('adminSis','Administrador de l\'aplic
 
 class Usuari(User):
     esAdminSistema = models.CharField(max_length=255, choices=roles_choice) 
+    usuari = models.OneToOneField(User)
     def __unicode__(self):
         return self.username

@@ -18,7 +18,7 @@ class Taula(models.Model):
     estat = models.CharField(max_length=255, choices=taula_choice, default='disponible')
 
 class Comanda(models.Model):
-    usuari = models.ForeignKey(Usuari)
+    usuari = models.ForeignKey(User)
     taula = models.ForeignKey(Taula)
     dataHora = models.DateTimeField(auto_now_add=True)
     metodePagament = models.CharField(max_length=255, choices=metode_pagament_choice, null=True, blank=True)
