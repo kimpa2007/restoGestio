@@ -24,7 +24,7 @@ $(document).ready(function() {
 		if ($('#usuari').length > 0) {
 			carregaMoment();
 			 $.ajax({
-		        	url : "/tpv/donaTaules",
+		        	url : "/comandes/donaTaules",
 		        	type : "GET",
 		        	dataType: "json",
 		        	success : function(taules) {
@@ -65,9 +65,8 @@ $(document).ready(function() {
 	$("#editaComanda").click(function(){
 		$("#tauletes").empty();
 		carregaMoment();
-		//carregarLinies();
 		$.ajax({
-        	url : "/tpv/taulesOccupades",
+        	url : "/comandes/taulesOccupades",
         	type : "GET",
         	dataType: "json",
         	success : function(taules) {
@@ -87,8 +86,13 @@ $(document).ready(function() {
         		  $('#tauletes').append("<button class='btn btn-success' id='comprovaT'> OK </button>");
         		  $('#comprovaT').click(function(){
 	      				var idTaula = $("#taules option:selected" ).attr('value');
+	      				console.log(idTaula)
 	    				var tauleta = $("#taules option:selected" ).text()
-	    					        				comandeta = new Comanda();
+	    				//carregaLinies(idTaula);
+	    				var idComanda = carregaIdComanda(idTaula);
+	      				console.log(idComanda)
+	    				//carregaLinies(idComanda)
+	    				comandeta = new Comanda();
 	    				var idTaula = $("#taules option:selected");
 	    				comandeta.setTaula(idTaula.attr("value"))
 	    				
@@ -96,6 +100,7 @@ $(document).ready(function() {
 	    				$("#taules").append("<span>" + tauleta + "</span>")
 	    				
 	    				carregaCategories();
+	    
         		  });
         	}
 		});
@@ -381,7 +386,7 @@ $(document).ready(function() {
 
 			var c = JSON.stringify(comandeta)
 			$.ajax({
-				url: "http://127.0.0.1:8000/tpv/passaComanda",
+				url: "/comandes/passaComanda",
 		        contentType: "application/json",
 				type: "GET",
 				data: {
@@ -398,7 +403,33 @@ $(document).ready(function() {
 			});
 		});
 		
-		function carregarLinies(){
-			
+		function carregaIdComanda(taula){
+			$.ajax({
+				url: "/comandes/recuperaIdComanda/" + taula,
+		        contentType: "application/json",
+				type: "GET",
+				
+		        success: function (response) {
+		        	console.log(response['idComanda'])
+		        	return response['idComanda'];
+		        },
+		        error: function (xhr, errmsg, err) {
+		        	alert(xhr.status + " " + xhr.responseText);
+		        }
+			});
+		}
+		
+		function carregaLinies(comanda){
+			$.ajax({
+				url: "/comandes/passaComanda/" + comanda,
+		        contentType: "application/json",
+				type: "GET",
+				
+		        success: function (response) {
+		        },
+		        error: function (xhr, errmsg, err) {
+		        	alert(xhr.status + " " + xhr.responseText);
+		        }
+			});
 		}
 });

@@ -7,8 +7,9 @@ from usuaris.models import Usuari
 from productes.models import Producte
 
 metode_pagament_choice = (('targeta','Targeta'),('effectiu','Effectiu')    )
-estat_comanda_choice = (('pendent','Pendent'),('tancada','Tancada'),('curs','En curs'))
+estat_comanda_choice = (('pendent','Pendent'),('tancada','Tancada'))
 taula_choice = (('ocupada','ocupada'),('disponible','disponible'))
+
     
 class MomentApat(models.Model):
     descripcio = models.CharField(max_length=255

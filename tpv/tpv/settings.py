@@ -40,7 +40,6 @@ INSTALLED_APPS = (
     'productes',
     'usuaris',
     'comanda',
-    'passaComanda',
 )
 
 MIDDLEWARE_CLASSES = (
