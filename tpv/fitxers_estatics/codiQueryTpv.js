@@ -482,12 +482,47 @@ $(document).ready(function() {
 						$("#t" + linia).append(tdxavi);
 						
 						if(opcio != ""){
-							$("#t" + linia).append("<td>" + qtat + "</td><td>" + producte + " amb " + opcio + " " + "</td><td>" + comentari + "</td>");
+							$("#t" + linia).append("<td>" + parseInt(qtat) + "</td><td>" + producte + " amb " + opcio + " " + "</td><td>" + comentari + "</td>");
 						}
 						else{
-							$("#t" + linia).append("<td>" + qtat + "</td><td>" + producte + "</td><td>" + comentari + "</td>");
+							$("#t" + linia).append("<td>" + parseInt(qtat) + "</td><td>" + producte + "</td><td>" + comentari + "</td>");
 						}
 						linia++;
+						
+						$(butoMes).click(function (){
+							var quantitatActual = $(this).parents("tr").children()[1].innerHTML;
+							var novaQuantitat = (parseInt(quantitatActual) + 1);
+							$(this).parents("tr").children()[1].innerHTML = novaQuantitat
+							var posicio = $(this).parents("tr").attr("id").substring(1);
+							comandeta.getLinia(posicio).setQuantitat(novaQuantitat);
+						});
+						
+						$(butoMenys).click(function (){
+							var quantitatActual = $(this).parents("tr").children()[1].innerHTML;
+							var posicio = $(this).parents("tr").attr("id").substring(1);
+
+							if(quantitatActual == 1){
+								var tfill = $(this).parents("tr").parents("tbody").children().length;
+								if(tfill == 1){
+									$(this).parents("tr").parents("tbody").parents("table").css("display","none");
+									
+								}
+								$(this).parents("tr").remove();
+								comandeta.esborraLinia(posicio);
+								linia--;
+
+								//Si comanda queda sense objecte, amagar resum
+								var a = comandeta.getLinies().length;
+								if(a < 1){
+									$("#resum").hide();
+								}
+							}
+							else{
+								var novaQuantitat = parseInt(quantitatActual) - 1;
+								$(this).parents("tr").children()[1].innerHTML = novaQuantitat
+								comandeta.getLinia(posicio).setQuantitat(novaQuantitat);
+							}
+						})
 		        	});
 		        },
 		        error: function (xhr, errmsg, err) {

@@ -195,28 +195,27 @@ def editaComanda(request):
     comandeta = json.loads(request.GET.get('comandeta'))
     taula = Taula.objects.get(id=comandeta['taula'])
     idComanda = comandeta['id']
-    Comanda.objects.filter(pk = id).update(usuari = request.user)
-
+    Comanda.objects.filter(pk = idComanda).update(usuari = request.user)
+    c =  Comanda.objects.get(pk = idComanda)
+    print c
+    linies = LiniaComanda.objects.filter(comanda = idComanda)
+    
     #Recuperar les linies i crear-les
     for l in linies:
+        id = l['id']
         quantitat = l['quantitat']
         comentari = l['comentari'] 
         producte = Producte.objects.get(producte= l['producte'])
-
+        moment = MomentApat.objects.get(descripcio = l['momentApat'])
+        
         if comandeta.has_key('opcio'):
             opcio = Opcio.objects.get(opcio = l['opcio'] )
             li.opcio = opcio
+            LiniaComanda.objects.filter(pk = id).update(opcio = opcio, producte= producte, total=quantitat, commentari = comentari, momentApat = moment)
 
-        moment = MomentApat.objects.get(descripcio = l['momentApat'])
-        
-        li = LiniaComanda()
-        li.comanda = c
-        li.producte = producte
-        li.total = quantitat
-        li.commentari = comentari
-        li.momentApat = moment
-        li.save()
-        
+        else:
+            LiniaComanda.objects.filter(pk = id).update(producte= producte, total=quantitat, commentari = comentari, momentApat = moment)
+
     n = {'res': "ok"}
     resposta = json.dumps(n)
     return StreamingHttpResponse(resposta, content_type="application/json")    
