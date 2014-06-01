@@ -15,4 +15,6 @@ urlpatterns = patterns('',
     url(r'^taulesOccupades/$', views.taulesOccupades, name="taulesOccupades"),
     url(r'^passaComanda/$', views.passaComanda, name='passaComanda'),
     url(r'^recuperaIdComanda/(?P<idTaula>\d+)/$', views.recuperaIdComanda, name='recuperaIdComanda'),
+    url(r'^editaComanda/$', views.editaComanda, name='editaComanda'),
+
 )

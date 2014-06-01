@@ -61,9 +61,11 @@ $(document).ready(function() {
 		
 		
 	});
-	
 	$("#editaComanda").click(function(){
 		$("#tauletes").empty();
+		$("#passaComanda").remove();
+		$("#anulaComanda").remove();
+		$("#resum").append("<button class='btn btn-success' id='editaC'>Edita comanda </button>");
 		carregaMoment();
 		$.ajax({
         	url : "/comandes/taulesOccupades",
@@ -86,12 +88,8 @@ $(document).ready(function() {
         		  $('#tauletes').append("<button class='btn btn-success' id='comprovaT'> OK </button>");
         		  $('#comprovaT').click(function(){
 	      				var idTaula = $("#taules option:selected" ).attr('value');
-	      				console.log(idTaula)
 	    				var tauleta = $("#taules option:selected" ).text()
-	    				//carregaLinies(idTaula);
-	    				var idComanda = carregaIdComanda(idTaula);
-	      				console.log(idComanda)
-	    				//carregaLinies(idComanda)
+	    				carregaIdComanda(idTaula);
 	    				comandeta = new Comanda();
 	    				var idTaula = $("#taules option:selected");
 	    				comandeta.setTaula(idTaula.attr("value"))
@@ -103,6 +101,25 @@ $(document).ready(function() {
 	    
         		  });
         	}
+		});
+		$("#editaC").click(function(){
+			var c = JSON.stringify(comandeta)
+			$.ajax({
+				url: "/comandes/editaComanda",
+		        contentType: "application/json",
+				type: "GET",
+				data: {
+					'comandeta': c 
+				},
+
+		        success: function (response) {
+		           alert("Comanda editada");
+		           location.reload(true);
+		        },
+		        error: function (xhr, errmsg, err) {
+		        	alert(xhr.status + " " + xhr.responseText);
+		        }
+			});
 		});
 	});
 	
@@ -410,8 +427,14 @@ $(document).ready(function() {
 				type: "GET",
 				
 		        success: function (response) {
-		        	console.log(response['idComanda'])
-		        	return response['idComanda'];
+		        	idComanda = response['idComanda'];
+		        	if (idComanda != 'error'){
+		        		comandeta.setId(idComanda);
+	    				carregaLinies(idComanda);
+		        	}
+		        	else{
+		        		alert("Error")
+		        	}
 		        },
 		        error: function (xhr, errmsg, err) {
 		        	alert(xhr.status + " " + xhr.responseText);
@@ -421,11 +444,51 @@ $(document).ready(function() {
 		
 		function carregaLinies(comanda){
 			$.ajax({
-				url: "/comandes/passaComanda/" + comanda,
+				url: "/comandes/recuperarLinies/" + comanda,
 		        contentType: "application/json",
 				type: "GET",
 				
-		        success: function (response) {
+		        success: function (li) {
+		        	$("#resum").show();
+		        	$.each(li, function() {
+		        		var producte = this['producte'];
+		        		var opcio = this['opcio'];
+		        		var qtat = this['total'];
+		        		var moment = this['momentApat'];
+		        		var comentari = this['comentari'];
+		        		var id = this['id'];
+		        		
+		        		var liniaNova = new LiniaComanda();
+		        		liniaNova.setIdLinia(id);
+						liniaNova.setProducte(producte);
+						liniaNova.setQuantitat(qtat);
+						liniaNova.setComentari(comentari);
+						liniaNova.setMomentApat(moment);
+						liniaNova.setOpcio(opcio)
+						comandeta.setLinies(liniaNova);
+		        		
+						if (moment == "Per emportar") 	tauleta ="peremportar";
+						else								var tauleta = moment.toLowerCase();
+						
+						$("#" + tauleta).show();
+						var butoMes = $("<button class='btn btn-info mes'>+</button>");
+						var butoMenys = $("<button class='btn btn-danger menys'>-</button>");
+
+						var tdxavi = $('<td></td>');
+						tdxavi.append(butoMes);
+						tdxavi.append(butoMenys);
+						if(comentari ==  null) comentari = " "
+						$("#" + tauleta  + "> tbody").append("<tr id='t" + linia + "'>" );
+						$("#t" + linia).append(tdxavi);
+						
+						if(opcio != ""){
+							$("#t" + linia).append("<td>" + qtat + "</td><td>" + producte + " amb " + opcio + " " + "</td><td>" + comentari + "</td>");
+						}
+						else{
+							$("#t" + linia).append("<td>" + qtat + "</td><td>" + producte + "</td><td>" + comentari + "</td>");
+						}
+						linia++;
+		        	});
 		        },
 		        error: function (xhr, errmsg, err) {
 		        	alert(xhr.status + " " + xhr.responseText);

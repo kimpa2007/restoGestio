@@ -54,7 +54,6 @@ def tancarComanda(request, idComanda):
     comandaExist = Comanda.objects.filter(pk = idComanda).exists()
     if comandaExist:
         comandeta = Comanda.objects.get(pk=idComanda)
-        print comandeta.estat
         if comandeta.estat != 'tancada':
             comandeta.estat = 'Tancada';
             comandeta.save()
@@ -72,7 +71,6 @@ def recuperarMomentsApat(request):
          res = []
          if momentsAp:
              opcio = MomentApat.objects.values('descripcio')
-             print opcio
              for n in opcio:
                     resposta = {}
                     resposta['moment'] = n             
@@ -87,18 +85,25 @@ def recuperarMomentsApat(request):
 @login_required
 def recuperarLinies(request, idComanda):
     comandaExist = Comanda.objects.filter(pk = idComanda).exists()
-    print idComanda
     if comandaExist:
         c = Comanda.objects.get(pk = idComanda)
         if c.estat == 'tancada':
             messages.error(request, 'Aquesta comanda està tancada')
             return render(request, 'error.html')
         else:
+            ##Falta recuperar el valor real de producte, opcio o momentapat
             linies = LiniaComanda.objects.filter(comanda = c)
-            liniesJson = serializers.serialize('json', linies)
-            return StreamingHttpResponse(liniesJson, content_type="application/json")    
+            res = []
+            for l in linies:
+                resposta = {}
+                resposta['id'] = str(l.id)
+                resposta ['producte'] = str(l.producte)
+                resposta['opcio'] =  str(l.opcio)
+                resposta['total'] = str(l.total)
+                resposta['momentApat'] = str(l.momentApat.descripcio)
+                res.append(resposta)
+            return StreamingHttpResponse(json.dumps(res), content_type="application/json")    
     else:
-        print "no comanda!"
         messages.error(request, 'No existeix aquesta comanda')
         return render(request, 'error.html')
     
@@ -108,15 +113,14 @@ def recuperaIdComanda(request,idTaula):
         t = Taula.objects.filter(pk = idTaula).exists()
         if t:
             comandes = Comanda.objects.filter(taula = idTaula)
-            print comandes
             for c in comandes:
-                if c.estat == 'Pendent':
+                if c.estat == 'Pendent' or c.estat == 'pendent':
                     n = {'idComanda': c.id}
                     idComanda = json.dumps(n)
-                else:
-                    print "esta tancada burro"
-                    n = {'idComanda': 'error'}
-                    idComanda = json.dumps(n)
+                    return StreamingHttpResponse(idComanda, content_type="application/json")    
+
+    n = {'idComanda': 'error'}
+    idComanda = json.dumps(n)
     return StreamingHttpResponse(idComanda, content_type="application/json")    
 
 @login_required
@@ -167,7 +171,6 @@ def passaComanda(request):
         quantitat = l['quantitat']
         comentari = l['comentari'] 
         producte = Producte.objects.get(producte= l['producte'])
-        print comandeta.has_key('opcio')
 
         if comandeta.has_key('opcio'):
             opcio = Opcio.objects.get(opcio = l['opcio'] )
@@ -187,3 +190,33 @@ def passaComanda(request):
     resposta = json.dumps(n)
     return StreamingHttpResponse(resposta, content_type="application/json")    
  
+@login_required
+def editaComanda(request):
+    comandeta = json.loads(request.GET.get('comandeta'))
+    taula = Taula.objects.get(id=comandeta['taula'])
+    idComanda = comandeta['id']
+    Comanda.objects.filter(pk = id).update(usuari = request.user)
+
+    #Recuperar les linies i crear-les
+    for l in linies:
+        quantitat = l['quantitat']
+        comentari = l['comentari'] 
+        producte = Producte.objects.get(producte= l['producte'])
+
+        if comandeta.has_key('opcio'):
+            opcio = Opcio.objects.get(opcio = l['opcio'] )
+            li.opcio = opcio
+
+        moment = MomentApat.objects.get(descripcio = l['momentApat'])
+        
+        li = LiniaComanda()
+        li.comanda = c
+        li.producte = producte
+        li.total = quantitat
+        li.commentari = comentari
+        li.momentApat = moment
+        li.save()
+        
+    n = {'res': "ok"}
+    resposta = json.dumps(n)
+    return StreamingHttpResponse(resposta, content_type="application/json")    
