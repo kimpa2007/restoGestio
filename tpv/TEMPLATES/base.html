@@ -29,7 +29,7 @@
 						<span id="dataHora" class="col-sm-offset-1 col-sm-2"> {{ hora }} </span>
 						{% if user.is_authenticated %} 
 							<span id="usuari">
-							<a class="col-sm-offset-1 col-sm-2" href="{% url 'usuaris:canviContrasenya' %}"> 
+							<a class="col-sm-offset-1 col-sm-2" href="{% url 'usuaris:dadesUsuari' %}"> 
 								<span class="glyphicon glyphicon-user"></span> Hola {{user.username}}
 							</a> 
 							<a class="col-sm-offset-3 col-sm-2" id="adeu" href="{% url 'usuaris:desautenticacio' %}"> 

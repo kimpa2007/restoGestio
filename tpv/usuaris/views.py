@@ -9,6 +9,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http.response import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+from django.core import serializers
+from comanda.models import Comanda, LiniaComanda
+from django.http import StreamingHttpResponse
 
 # Funció per autenticar usuaris
 def autenticacio(request):
@@ -92,3 +95,42 @@ def canviContrasenya(request):
         form = formulariCanvi() 
 
     return render(request, 'canviPassword.html', {  'form': form })
+
+@login_required
+def dadesUsuari(request):
+    return render(request,'dadesUsuari.html')
+
+@login_required
+def extreureDades(request):
+    data = serializers.serialize("xml", Comanda.objects.filter(usuari = request.user, estat = 'Tancada'))
+    comandes = Comanda.objects.filter(usuari = request.user, estat = 'Tancada')
+    ree = "<dades>"
+    for c in comandes:
+        id = c.id
+        dataHora = c.dataHora
+        linies = LiniaComanda.objects.filter(comanda = c.id)
+        total = c.total
+        ree = ree + "<comanda id='" + str(int(id)) + "'>"
+        if total is not None:
+            ree = ree + "<total>" + str(int(total)) + "</total>" 
+        
+        for l in linies:
+            idl = l.id
+            producte = l.producte.producte
+            quantitat = l.total
+            opcio = l.opcio
+            momentApat = l.momentApat
+
+            ree = ree + "<linia id='" + str(int(idl)) + "'>"
+            ree = ree + "<producte>" + str(producte) + "</producte>"
+            ree = ree +"<opcio>" + str(opcio) + "</opcio>"
+            ree = ree + "<quantitat>" + str(int(quantitat)) + "</quantitat>"
+            if 'comentari' in linies:
+                comentari = l.comentari 
+                ree = ree +"<comentari>" + str(comentari) + "</comentari>"
+            ree = ree + "</linia>"
+
+        ree = ree + "</comanda>"
+    ree= ree + "</dades>"
+    print ree        
+    return StreamingHttpResponse(ree, content_type="application/xml")    

@@ -43,8 +43,6 @@ class LiniaComanda(models.Model):
     opcio = models.CharField(max_length=255)
     momentApat = models.ForeignKey(MomentApat)
     ##calcular auto total?(projecte)
-    def __unicode__(self):
-        return unicode(self.comanda)
 
 
 def post_save_comanda(sender, instance, created, **kwargs):
