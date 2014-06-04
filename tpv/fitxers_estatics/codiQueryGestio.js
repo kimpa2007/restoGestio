@@ -66,6 +66,7 @@ $(document).ready(function() {
     $(".cobrar").click(function (){
     	$("#total").empty();
     	$("#total1").empty();
+    	$("#normal").prop("checked","true");
     	//$("#total2").empty();
     	comanda = $(this).attr("id");
     	
@@ -74,9 +75,8 @@ $(document).ready(function() {
         	type : "GET",
 	        contentType: "application/json",
         	success : function(t){
-        		console.log(t)
         		total = t['total'];
-            	$("#total").append("<div>" + total + "</div>");
+            	$("#total").append("<div>Total a cobrar: " + total + "€</div>");
         	},
 	        error: function (xhr, errmsg, err) {
 	        	alert(xhr.status + " " + xhr.responseText);
@@ -84,20 +84,38 @@ $(document).ready(function() {
         });
 		$("#myModal").modal('show');
     });
+
     
     $("#efectiu").click(function (){
-    	console.log(idComanda)
     	$("#myModal").modal('hide');
+    	$("#meffectiu").modal('show');
     	pagament = "efectiu";
     });
     
     $("#targeta").click(function (){
     	$("#myModal").modal('hide');
-    	$("#total1").append("<div>" + total + "</div>");
+    	$("#total1").append("<div> Total a cobrar: " + total + "€</div>");
     	pagament = "targeta";
     	guardarPagament();
     });
     
+    $("#donaCanvi").click(function (){
+    	var qtatDonada = $("#qtatDonada").val();
+    	console.log(qtatDonada)
+    	
+    	$.ajax({
+        	url : "/gestio/donaCanvi/" +qtatDonada + "/" + total,
+        	type : "GET",
+	        contentType: "application/json",
+        	success : function(t){
+        		//Ensenyar modal am el canvi o insult si cal
+        	},
+	        error: function (xhr, errmsg, err) {
+	        	alert(xhr.status + " " + xhr.responseText);
+	        }
+        });
+
+    });
     
     function guardarPagament(){
     	comanda = comanda.trim()

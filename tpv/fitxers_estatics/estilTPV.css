@@ -41,3 +41,8 @@ caption{
 #menuMagic{
 	color: black !important;
 }
+
+#categories, #productes, #resum {
+    max-height: 350px;
+    overflow-y:scroll; 
+}

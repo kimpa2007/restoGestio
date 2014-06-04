@@ -12,4 +12,8 @@ urlpatterns = patterns('',
     url(r'^veureDetalls/(?P<idComanda>\d+)$', views.veureDetalls, name='veureDetalls'),
     url(r'^tancarComanda/(?P<idComanda>\d+)/$', views.tancarComanda, name='tancarComanda'),
     url(r'^guardarPagament/(?P<idComanda>\d+)/(?P<pagament>\w+)/$', views.guardarPagament, name='guardarPagament'),
+    url(r'^donaCanvi/(?P<qtatDonada>(\d+\.\d+))/(?P<total>(\d+\.\d+))/$', views.donaCanvi, name='donaCanvi'),
+    url(r'^donaCanvi/(?P<qtatDonada>\d+)/(?P<total>\d+)/$', views.donaCanvi, name='donaCanvi'),
+    url(r'^donaCanvi/(?P<qtatDonada>\d+)/(?P<total>(\d+\.\d+))/$', views.donaCanvi, name='donaCanvi'),
+    url(r'^donaCanvi/(?P<qtatDonada>(\d+\.\d+))/(?P<total>\d+)/$', views.donaCanvi, name='donaCanvi'),
  )

@@ -150,3 +150,8 @@ def guardarPagament(request, idComanda, pagament):
         messages.error(request, 'No es pot tancar una comanda que no existeix.')
         return render(request,'error.html')
     return StreamingHttpResponse(resposta, content_type="application/json") 
+
+def donaCanvi(request, qtatDonada, total):
+    print qtatDonada
+    print total
+    return StreamingHttpResponse(resposta, content_type="application/json") 
