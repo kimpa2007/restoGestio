@@ -108,6 +108,19 @@ $(document).ready(function() {
         	type : "GET",
 	        contentType: "application/json",
         	success : function(t){
+        		console.log(t)
+        		resultat = t['res']
+        		if(resultat == "Falta"){
+        			alert ("Error, faltan diners!")
+        		}
+        		if(resultat == "0"){
+        			alert("Quantitat justa. Comanda pagada.")
+        			guardarPagament();
+        		}
+        		else{
+        			$("#retorn").text(resultat);
+        			$("#retorna").modal("show");
+        		}
         		//Ensenyar modal am el canvi o insult si cal
         	},
 	        error: function (xhr, errmsg, err) {
@@ -124,14 +137,23 @@ $(document).ready(function() {
         	type : "GET",
 	        contentType: "application/json",
         	success : function(t){
-            	$("#mtargeta").modal('show');
+        		if (pagament == "targeta"){
+        			$("#mtargeta").modal('show');
+        		}
+        		else{
+        			alert("Pagament realitzat.")
+        			location.reload()
+        		}
         	},
 	        error: function (xhr, errmsg, err) {
-	        	alert(xhr.status + " " + xhr.responseText);
+	        	alert("Error al moment de cobrar!");
 	        }
         });
     }
     $(".ok").click(function(){
     	location.reload();
+    });
+    $("#canviXivat").click(function(){
+		guardarPagament();
     });
 }); 

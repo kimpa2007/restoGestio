@@ -112,7 +112,6 @@ def veureDetalls(request, idComanda):
 def tancarComanda(request, idComanda):
     comandaExist = Comanda.objects.filter(pk = idComanda).exists()
     if comandaExist:
-        comandeta = Comanda.objects.get(pk=idComanda)
         if comandeta.estat != 'tancada':
             comandeta.estat = 'Tancada';
             comandeta.save()
@@ -152,6 +151,13 @@ def guardarPagament(request, idComanda, pagament):
     return StreamingHttpResponse(resposta, content_type="application/json") 
 
 def donaCanvi(request, qtatDonada, total):
-    print qtatDonada
-    print total
+   
+    torna = round(float(qtatDonada) - float(total),2);
+
+    if torna <0:
+        n = {"res": "Falta"}
+    else:
+        n = {"res": torna}
+    resposta = json.dumps(n)
+    
     return StreamingHttpResponse(resposta, content_type="application/json") 
