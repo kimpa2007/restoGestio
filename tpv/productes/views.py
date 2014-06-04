@@ -58,16 +58,6 @@ def afegirProducte(request,categoria=None):
 
     else:
         form = formProducte()
-        
-        
-        
-    if categoria is not None: 
-        print "ok"
-        #formulari am el cat selecionat
-    else:
-        print "no cat"
-        #formilari am el cat sense selecionar
-        
     camps_bootstrap = ('categoria','producte','preu','imatge')
     for c in camps_bootstrap:
         form.fields[c].widget.attrs['class'] = 'form-control'

@@ -1,0 +1,15 @@
+{% extends "base.html" %} {% block title %} Detalls de l'usuari {% endblock %} 
+{% block content %}
+<div class="col-md-12">
+	<div class="row">
+		<div class="jumbotron col-md-offset-2 col-md-8">
+			<div> Usuari: {{ user.username }} </div>
+			<div> Nom: {{ user.last_name }} </div>
+			<div> Cognom: {{user.first_name }} </div>
+			
+			<a class="btn btn-default col-md-3 " href="{% url 'usuaris:extreureDades' %}" value="exporta"> Exporta dades </a>
+			<a class="btn btn-default col-md-3" href="{% url 'usuaris:canviContrasenya' %}" value="canvia"> Canvia contrasenya </a>
+		</div>
+	</div>
+</div>
+{% endblock %}

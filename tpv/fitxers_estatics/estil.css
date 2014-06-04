@@ -25,8 +25,14 @@
 
 .senseImg{
 	height: 590% !important;
-	line-height: 590% !important;
 }
 .etiqueta{
 	font-size: 80% !important;
+}
+
+#menuMagic a:link, #menuMagic a:visited,  #menuMagic a:hover,  #menuMagic a:active { 
+	color: white !important; 
+}
+#menuMagic{
+	color: white !important;
 }

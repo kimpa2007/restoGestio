@@ -1,0 +1,28 @@
+{% extends "base.html" %} {% block title %} Comandes pagades {% endblock %} 
+
+{% block content %}
+	{% for comanda in comandes %}
+		<div class="row col-md-offset-2 col-md-10>
+			<span class="col-md-2"> Taula: {{ comanda.taula.id }} </span>
+			<span class="col-md-2"> Comanda:	<a value="{{ comanda.id }}" class="comandes">{{ comanda.id }}</a></span>
+			<span class="col-md-4"> Data i hora: {{ comanda.dataHora }} </span>
+		</div>
+	{% endfor %}
+	<div class="col-md-offset-2 col-md-8">
+	<div class="pagination">
+		{% if comandes.has_previous %} <li><a href="?pagina={{ comandes.previous_page_number }}">&laquo;</a></li>
+		{% else %} <li class="disabled"> <a>&laquo;</a> </li>
+		{% endif %}
+
+		{% for i in comandes.paginator.page_range %}
+		{% ifequal i comandes.number %} <li class="active"> <a href="?pagina={{ i }}">{{ i }}</a></li>
+		{% else %}<li> <a href="?pagina={{ i }}">{{ i }}</a></li>
+		{% endifequal %}
+		{% endfor %}
+
+		{% if comandes.has_next %}<li><a href="?pagina={{ comandes.next_page_number }}">&raquo;</a></li>
+		{% else %}<li class="disabled"><a>&raquo;</a></li>
+		{% endif %}
+		</div>
+		</div>
+{% endblock %}

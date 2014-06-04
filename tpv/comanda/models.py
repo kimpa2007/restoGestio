@@ -7,7 +7,7 @@ from usuaris.models import Usuari
 from productes.models import Producte
 
 metode_pagament_choice = (('targeta','Targeta'),('effectiu','Effectiu')    )
-estat_comanda_choice = (('pendent','Pendent'),('tancada','Tancada'))
+estat_comanda_choice = (('pendent','Pendent'),('tancada','Tancada'),('pagada','Pagada'))
 taula_choice = (('ocupada','ocupada'),('disponible','disponible'))
 
     

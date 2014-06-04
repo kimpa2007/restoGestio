@@ -26,3 +26,18 @@
 caption{
 	font-weigth: bold;
 }
+.producte{
+	padding: 5px !important;
+	border-radius: 7px;
+	border-style: solid;
+	background-color: lightblue !important;
+	text-align:center;
+	margin: 1%;
+}
+
+#menuMagic , a:link,  #menuMagic a:visited,  #menuMagic a:hover,  #menuMagic a:active { 
+	color:black !important; 
+}
+#menuMagic{
+	color: black !important;
+}

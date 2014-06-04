@@ -4,6 +4,8 @@ $(document).ready(function() {
 	var comandeta;
 	var moments = new Array();
 	var linia = 0;
+	var defaultMomentet = "QuanSigui";
+	var cat;
 	
 	setInterval(function() {
 		   $.ajax({
@@ -133,7 +135,7 @@ $(document).ready(function() {
 					   var id = this['pk']
 					   var nom = this['fields']['categoria']
 					   var imatge =this['fields']['imatge']
-					   $("#categories").append("<div class='categories'><img src='/media/" + imatge + "' alt='" + nom + "'/>" + nom + "</div>" )
+					   $("#categories").append("<span class='categories'><img src='/media/" + imatge + "' alt='" + nom + "'/><p id='etiqueta'>" + nom + "</p></span>" )
 				   });
 				   $("#demo1").als({
 						visible_items: 4,
@@ -145,8 +147,7 @@ $(document).ready(function() {
 
 				   $('.categories').click(function() {
 					    $('#productes').empty();
-				        var cat = $(this).text(); 
-				    
+				        cat = $(this).text(); 
 				        $.ajax({
 				        	url : "/productes/llistarProductes",
 				        	type : "GET",
@@ -161,15 +162,15 @@ $(document).ready(function() {
 				        		      var img = this['fields']['imatge'];
 				        		      var imatge = "/media/" + this['fields']['imatge'];
 				        		      if(img.length > 0){ 
-					        		      $('#productes').append("<div class='col-md-2 col-xs-2 producte'  id='" + id + 
+				        		    	  $('#productes').append("<div class='producte'  id='" + id + 
 					        		    		  "'><img class='img-responsive' src='" + imatge +
-					        		    		  "'><p class='etiqueta'>" +
+					        		    		  "'><p>" +
 					        		    		  producte + "</p></a></div>");
 					        		      }
 				        		      else{
-					        		      $('#productes').append("<div class='col-md-2 producte'  id='" + id + 
-					        		    		  "'><p class='etiqueta senseImg'>" +  producte + "</p></a></div>");
-					        		   
+					        		      $('#productes').append("<div class='producte'  id='" + id + 
+					        		    		  "'><p>" +  producte + "</p></a></div>");
+
 				        		      }
 				        		  });
 				 
@@ -266,12 +267,15 @@ $(document).ready(function() {
 				for(var i=0; i<opcionetes.length; i++){
 					$("#opcionetes").append("<option value=" + opcionetes[i]+ ">" + opcionetes[i] + "</option>")
 				}
+				
 			}
 			if(moments.length > 0){
 				$("#formulari").append("<label> Moment Apat </label><select class='form-control' id='momentet'></select>")
 				for(var i=0; i<moments.length; i++){
 					$("#momentet").append("<option value=" + moments[i]+ ">" + moments[i] + "</option>")
 				}
+				defaultMoment();
+				$('#momentet option[value="' + defaultMomentet + '"]').prop('selected',true);
 			}
 			$("#formulari").append("<label> Comentari </label> <textarea class='form-control' id='comentari'>")
 		
@@ -288,107 +292,105 @@ $(document).ready(function() {
 				var comentari = $("#comentari").val()
 				var momentapat = $("#momentet option:selected").text()
 				
+					//Crear un nou objecte
 				
-				
-				//Crear un nou objecte
-			
-				if( quantitat > 0 && producte !=null && momentapat != null){
-					//Comprovar si ja existeix un objecte amb aquest producte, opcio i moment apat.
-					var existeix = false;
-					var posicio;
-					for(var i=0; i<comandeta.getLinies().length; i++){
-						var p = comandeta.getLinia(i).getProducte();
-						var o = comandeta.getLinia(i).getOpcio();
-						var m = comandeta.getLinia(i).getMoment();
-						var c = comandeta.getLinia(i).getComentari();
-						if(p==producte && m==momentapat && o==opcio && c==comentari){
-							existeix = true;
-							//localitzar la linia (es veu que es correspon amb la posició que occupa a l'array de linies).
-							posicio = i;
-							break;
+					if( quantitat > 0 && producte !=null && momentapat != null){
+						//Comprovar si ja existeix un objecte amb aquest producte, opcio i moment apat.
+						var existeix = false;
+						var posicio;
+						for(var i=0; i<comandeta.getLinies().length; i++){
+							var p = comandeta.getLinia(i).getProducte();
+							var o = comandeta.getLinia(i).getOpcio();
+							var m = comandeta.getLinia(i).getMoment();
+							var c = comandeta.getLinia(i).getComentari();
+							if(p==producte && m==momentapat && o==opcio && c==comentari){
+								existeix = true;
+								//localitzar la linia (es veu que es correspon amb la posició que occupa a l'array de linies).
+								posicio = i;
+								break;
+							}
 						}
-					}
-					
-					if(existeix){
-						//afegir un a quantitat	
-						var quantitatActual = $("#t" + posicio).children()[1].innerHTML;
-						var novaQuantitat = parseInt(quantitatActual) + 1;
-						$("#t" + posicio).children()[1].innerHTML = novaQuantitat
-						comandeta.getLinia(posicio).setQuantitat(novaQuantitat);
-
-					}
-					else {
-						var liniaNova = new LiniaComanda();
-						liniaNova.setProducte(producte);
-						liniaNova.setQuantitat(quantitat);
-						liniaNova.setComentari(comentari);
-						liniaNova.setMomentApat(momentapat);
-						liniaNova.setOpcio(opcio)
-						comandeta.setLinies(liniaNova);
 						
-						if (momentapat == "Per emportar") 	taula="peremportar";
-						else								var taula = momentapat.toLowerCase();
-	
-						
-						$("#" + taula).show();
-						var butoMes = $("<button class='btn btn-info mes'>+</button>");
-						var butoMenys = $("<button class='btn btn-danger menys'>-</button>");
-						var tdxavi = $('<td></td>');
-						tdxavi.append(butoMes);
-						tdxavi.append(butoMenys);
-						
-						$("#" + taula  + "> tbody").append("<tr id='t" + linia + "'>" );
-						$("#t" + linia).append(tdxavi);
-						if(opcio != ""){
-							$("#t" + linia).append("<td>" + quantitat + "</td><td>" + producte + " amb " + opcio + " " + "</td><td>" + comentari + "</td>");
-						}
-						else{
-							$("#t" + linia).append("<td>" + quantitat + "</td><td>" + producte + "</td><td>" + comentari + "</td>");
-						}
-						linia++;
-						
-						$(butoMes).click(function (){
-							var quantitatActual = $(this).parents("tr").children()[1].innerHTML;
-							var novaQuantitat = (parseInt(quantitatActual) + 1);
-							$(this).parents("tr").children()[1].innerHTML = novaQuantitat
-							var posicio = $(this).parents("tr").attr("id").substring(1);
+						if(existeix){
+							//afegir un a quantitat	
+							var quantitatActual = $("#t" + posicio).children()[1].innerHTML;
+							var novaQuantitat = parseInt(quantitatActual) + 1;
+							$("#t" + posicio).children()[1].innerHTML = novaQuantitat
 							comandeta.getLinia(posicio).setQuantitat(novaQuantitat);
-						});
-						
-						$(butoMenys).click(function (){
-							var quantitatActual = $(this).parents("tr").children()[1].innerHTML;
-							var posicio = $(this).parents("tr").attr("id").substring(1);
-
-							if(quantitatActual == 1){
-								var tfill = $(this).parents("tr").parents("tbody").children().length;
-								if(tfill == 1){
-									$(this).parents("tr").parents("tbody").parents("table").css("display","none");
-									
-								}
-								$(this).parents("tr").remove();
-								comandeta.esborraLinia(posicio);
-								linia--;
-
-								//Si comanda queda sense objecte, amagar resum
-								var a = comandeta.getLinies().length;
-								if(a < 1){
-									$("#resum").hide();
-								}
+	
+						}
+						else {
+							var liniaNova = new LiniaComanda();
+							liniaNova.setProducte(producte);
+							liniaNova.setQuantitat(quantitat);
+							liniaNova.setComentari(comentari);
+							liniaNova.setMomentApat(momentapat);
+							liniaNova.setOpcio(opcio)
+							comandeta.setLinies(liniaNova);
+							
+							if (momentapat == "Per emportar") 	taula="peremportar";
+							else								var taula = momentapat.toLowerCase();
+		
+							
+							$("#" + taula).show();
+							var butoMes = $("<button class='btn btn-info mes'>+</button>");
+							var butoMenys = $("<button class='btn btn-danger menys'>-</button>");
+							var tdxavi = $('<td></td>');
+							tdxavi.append(butoMes);
+							tdxavi.append(butoMenys);
+							
+							$("#" + taula  + "> tbody").append("<tr id='t" + linia + "'>" );
+							$("#t" + linia).append(tdxavi);
+							if(opcio != ""){
+								$("#t" + linia).append("<td>" + quantitat + "</td><td>" + producte + " amb " + opcio + " " + "</td><td>" + comentari + "</td>");
 							}
 							else{
-								var novaQuantitat = parseInt(quantitatActual) - 1;
-								$(this).parents("tr").children()[1].innerHTML = novaQuantitat
-								comandeta.getLinia(posicio).setQuantitat(novaQuantitat);
+								$("#t" + linia).append("<td>" + quantitat + "</td><td>" + producte + "</td><td>" + comentari + "</td>");
 							}
-						})
+							linia++;
+							
+							$(butoMes).click(function (){
+								var quantitatActual = $(this).parents("tr").children()[1].innerHTML;
+								var novaQuantitat = (parseInt(quantitatActual) + 1);
+								$(this).parents("tr").children()[1].innerHTML = novaQuantitat
+								var posicio = $(this).parents("tr").attr("id").substring(1);
+								comandeta.getLinia(posicio).setQuantitat(novaQuantitat);
+							});
+							
+							$(butoMenys).click(function (){
+								var quantitatActual = $(this).parents("tr").children()[1].innerHTML;
+								var posicio = $(this).parents("tr").attr("id").substring(1);
+	
+								if(quantitatActual == 1){
+									var tfill = $(this).parents("tr").parents("tbody").children().length;
+									if(tfill == 1){
+										$(this).parents("tr").parents("tbody").parents("table").css("display","none");
+										
+									}
+									$(this).parents("tr").remove();
+									comandeta.esborraLinia(posicio);
+									linia--;
+	
+									//Si comanda queda sense objecte, amagar resum
+									var a = comandeta.getLinies().length;
+									if(a < 1){
+										$("#resum").hide();
+									}
+								}
+								else{
+									var novaQuantitat = parseInt(quantitatActual) - 1;
+									$(this).parents("tr").children()[1].innerHTML = novaQuantitat
+									comandeta.getLinia(posicio).setQuantitat(novaQuantitat);
+								}
+							})
+						}
 					}
-				}
-				
 				netejaModal();
 			});
 		}
 		
 		function netejaModal(){
+			cat = "";
 			quantitat = "";
 			producte = "";
 			$("#contenido-interno").empty();
@@ -400,24 +402,29 @@ $(document).ready(function() {
 		});
 		
 		$("#passaComanda").click(function(){
-
-			var c = JSON.stringify(comandeta)
-			$.ajax({
-				url: "/comandes/passaComanda",
-		        contentType: "application/json",
-				type: "GET",
-				data: {
-					'comandeta': c 
-				},
-
-		        success: function (response) {
-		           alert("Comanda afegida");
-		           location.reload(true);
-		        },
-		        error: function (xhr, errmsg, err) {
-		        	alert(xhr.status + " " + xhr.responseText);
-		        }
-			});
+			if(comandeta.getLinies().length < 1){
+				alert("Comanda invàlida");
+			}
+			else{
+				var c = JSON.stringify(comandeta)
+				
+				$.ajax({
+					url: "/comandes/passaComanda",
+			        contentType: "application/json",
+					type: "GET",
+					data: {
+						'comandeta': c 
+					},
+	
+			        success: function (response) {
+			           alert("Comanda afegida");
+			           location.reload(true);
+			        },
+			        error: function (xhr, errmsg, err) {
+			        	alert(xhr.status + " " + xhr.responseText);
+			        }
+				});
+			}
 		});
 		
 		function carregaIdComanda(taula){
@@ -529,5 +536,34 @@ $(document).ready(function() {
 		        	alert(xhr.status + " " + xhr.responseText);
 		        }
 			});
+		}
+		
+		function defaultMoment(){
+
+			switch(cat){
+				case "Aperitiu":
+					defaultMomentet = "Primer";
+				break;
+				
+				case "Entrants":
+					defaultMomentet = "Primer";
+				break;
+				
+				case "Carns":
+					defaultMomentet = "Segon";
+				break;
+				
+				case "Postres":
+					defaultMomentet = "Postre";
+				break;
+				
+				case "Cafés":
+					defaultMomentet = "Café"
+				break;
+				 
+				default:
+					defaultMomentet = "QuanSigui";
+				break;				
+			}
 		}
 });

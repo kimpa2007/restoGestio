@@ -1,0 +1,31 @@
+{% extends "base.html" %} {% block title %} Comandes pendents {% endblock %} 
+
+{% block content %}
+	{% for comanda in comandesPendents %}
+		<div class="row col-md-offset-2">
+			<span class="col-md-2"> Comanda:	<a value="{{ comanda.id }}" class="comandes">{{ comanda.id }}</a></span>
+			<span class="col-md-2"> Taula: {{ comanda.taula.id }} </span>
+			<span class="col-md-4"> Data i hora: {{ comanda.dataHora }} </span>
+			<span class="col-md-2">
+				<a class="btn btn-default" href="{% url 'gestio:veureDetalls' comanda.id %}">Veure detalls</a>
+			</span>
+		</div>
+	{% endfor %}
+	<div class="col-md-offset-2 col-md-8">
+		<div class="pagination">
+			{% if comandesPendents.has_previous %} <li><a href="?pagina={{ comandesPendents.previous_page_number }}">&laquo;</a></li>
+			{% else %} <li class="disabled"> <a>&laquo;</a> </li>
+			{% endif %}
+	
+			{% for i in comandesPendents.paginator.page_range %}
+			{% ifequal i comandesPendents.number %} <li class="active"> <a href="?pagina={{ i }}">{{ i }}</a></li>
+			{% else %}<li> <a href="?pagina={{ i }}">{{ i }}</a></li>
+			{% endifequal %}
+			{% endfor %}
+	
+			{% if comandesPendents.has_next %}<li><a href="?pagina={{ comandesPendents.next_page_number }}">&raquo;</a></li>
+			{% else %}<li class="disabled"><a>&raquo;</a></li>
+			{% endif %}
+			</div>
+		</div>
+{% endblock %}

@@ -4,19 +4,13 @@
 {% block content %}
 <div class="container">
 	<div class="row clearfix">
-		<div class="col-md-6 column" >
-			<div class="row clearfix">
-				<div class="col-md-6 column" id="categories">
+		<div class="col-md-2 column" id="categories"></div>
+		<div class="col-md-3" id="productes"></div>
+		<div id="resum" class="col-md-5 column">
+			<h3> Resum de la comanda </h3>
+				<button class="btn btn-success" id="passaComanda" >Passar Comanda </button>
+				<button class="btn btn-warning" id="anulaComanda">Cancelar Comanda </button>
 		</div>
-				<div class="col-md-12 column" id="productes">
-				</div>
-			</div>
-		</div>
-			<div id="resum" class="col-md-6 column">
-				<h3> Resum de la comanda </h3>
-					<button class="btn btn-success" id="passaComanda" >Passar Comanda </button>
-					<button class="btn btn-warning" id="anulaComanda">Cancelar Comanda </button>
-			</div>
 	</div>
 </div>
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
